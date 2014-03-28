@@ -36,38 +36,7 @@ class PropertiesController < ApplicationController
     @last_traded_price = api['last']
 
    ###### Allows some fields to blank when filtering listings
-
-    conditions  = []
-    arguments = {}
- 
-    unless params[:address_suburb].blank?
-      conditions << 'address_suburb = :address_suburb'
-      arguments[:address_suburb] = params[:address_suburb]
-    end
-   
-    unless params[:bathrooms].blank?
-      conditions << 'bathrooms = :bathrooms'
-      arguments[:bathrooms] = params[:bathrooms]
-    end
-
-    unless params[:bedrooms].blank?
-      conditions << 'bedrooms = :bedrooms'
-      arguments[:bedrooms] = params[:bedrooms]
-    end
-   
-    unless params[:garages].blank?
-      conditions << 'garages = :garages'
-      arguments[:garages] = params[:garages]
-    end
-
-    unless params[:price].blank?
-      conditions << 'price <= :price'
-      arguments[:price] = params[:price]
-    end
-   
-    all_conditions = conditions.join(' AND ')
-   
-    @search_results = Property.find(:all, :conditions => [all_conditions, arguments])
+    @search_results = Property.search_query(params)
   end
 
   def update

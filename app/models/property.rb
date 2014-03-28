@@ -36,4 +36,37 @@ class Property < ActiveRecord::Base
 
     belongs_to :user
     has_many :photos
+
+    def self.search_query(params)
+        conditions  = []
+        arguments = {}
+     
+        unless params[:address_suburb].blank?
+          conditions << 'address_suburb = :address_suburb'
+          arguments[:address_suburb] = params[:address_suburb]
+        end
+       
+        unless params[:bathrooms].blank?
+          conditions << 'bathrooms = :bathrooms'
+          arguments[:bathrooms] = params[:bathrooms]
+        end
+
+        unless params[:bedrooms].blank?
+          conditions << 'bedrooms = :bedrooms'
+          arguments[:bedrooms] = params[:bedrooms]
+        end
+       
+        unless params[:garages].blank?
+          conditions << 'garages = :garages'
+          arguments[:garages] = params[:garages]
+        end
+
+        unless params[:price].blank?
+          conditions << 'price <= :price'
+          arguments[:price] = params[:price]
+        end
+       
+        all_conditions = conditions.join(' AND ')
+        results = Property.find(:all, :conditions => [all_conditions, arguments])
+    end
 end
